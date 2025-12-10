@@ -294,7 +294,7 @@ InsertTuples(Relation index, IvfflatBuildState * buildstate, ForkNumber forkNum)
 				IvfflatAppendPage(index, &buf, &page, &state, forkNum);
 
 			/* Add the item */
-			if (PageAddItem(page, (Item) itup, itemsz, InvalidOffsetNumber, false, false) == InvalidOffsetNumber)
+			if (PageAddItem(page, (const void *) itup, itemsz, InvalidOffsetNumber, false, false) == InvalidOffsetNumber)
 				elog(ERROR, "failed to add index item to \"%s\"", RelationGetRelationName(index));
 
 			pfree(itup);
@@ -506,7 +506,7 @@ CreateListPages(Relation index, VectorArray centers, int lists,
 			IvfflatAppendPage(index, &buf, &page, &state, forkNum);
 
 		/* Add the item */
-		offno = PageAddItem(page, (Item) list, listSize, InvalidOffsetNumber, false, false);
+		offno = PageAddItem(page, (const void *) list, listSize, InvalidOffsetNumber, false, false);
 		if (offno == InvalidOffsetNumber)
 			elog(ERROR, "failed to add index item to \"%s\"", RelationGetRelationName(index));
 

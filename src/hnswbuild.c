@@ -213,7 +213,7 @@ CreateGraphPages(HnswBuildState * buildstate)
 		ItemPointerSet(&etup->neighbortid, element->neighborPage, element->neighborOffno);
 
 		/* Add element */
-		if (PageAddItem(page, (Item) etup, etupSize, InvalidOffsetNumber, false, false) != element->offno)
+		if (PageAddItem(page, (const void *) etup, etupSize, InvalidOffsetNumber, false, false) != element->offno)
 			elog(ERROR, "failed to add index item to \"%s\"", RelationGetRelationName(index));
 
 		/* Add new page if needed */
@@ -221,7 +221,7 @@ CreateGraphPages(HnswBuildState * buildstate)
 			HnswBuildAppendPage(index, &buf, &page, forkNum);
 
 		/* Add placeholder for neighbors */
-		if (PageAddItem(page, (Item) ntup, ntupSize, InvalidOffsetNumber, false, false) != element->neighborOffno)
+		if (PageAddItem(page, (const void *) ntup, ntupSize, InvalidOffsetNumber, false, false) != element->neighborOffno)
 			elog(ERROR, "failed to add index item to \"%s\"", RelationGetRelationName(index));
 	}
 
@@ -277,7 +277,7 @@ WriteNeighborTuples(HnswBuildState * buildstate)
 
 		HnswSetNeighborTuple(base, ntup, element, m);
 
-		if (!PageIndexTupleOverwrite(page, element->neighborOffno, (Item) ntup, ntupSize))
+		if (!PageIndexTupleOverwrite(page, element->neighborOffno, (const void *) ntup, ntupSize))
 			elog(ERROR, "failed to add index item to \"%s\"", RelationGetRelationName(index));
 
 		/* Commit */

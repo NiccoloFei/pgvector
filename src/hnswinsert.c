@@ -311,18 +311,18 @@ AddElementOnDisk(Relation index, HnswElement e, int m, BlockNumber insertPage, B
 	/* Add element and neighbors */
 	if (OffsetNumberIsValid(freeOffno))
 	{
-		if (!PageIndexTupleOverwrite(page, e->offno, (Item) etup, etupSize))
+		if (!PageIndexTupleOverwrite(page, e->offno, (const void *) etup, etupSize))
 			elog(ERROR, "failed to add index item to \"%s\"", RelationGetRelationName(index));
 
-		if (!PageIndexTupleOverwrite(npage, e->neighborOffno, (Item) ntup, ntupSize))
+		if (!PageIndexTupleOverwrite(npage, e->neighborOffno, (const void *) ntup, ntupSize))
 			elog(ERROR, "failed to add index item to \"%s\"", RelationGetRelationName(index));
 	}
 	else
 	{
-		if (PageAddItem(page, (Item) etup, etupSize, InvalidOffsetNumber, false, false) != e->offno)
+		if (PageAddItem(page, (const void *) etup, etupSize, InvalidOffsetNumber, false, false) != e->offno)
 			elog(ERROR, "failed to add index item to \"%s\"", RelationGetRelationName(index));
 
-		if (PageAddItem(npage, (Item) ntup, ntupSize, InvalidOffsetNumber, false, false) != e->neighborOffno)
+		if (PageAddItem(npage, (const void *) ntup, ntupSize, InvalidOffsetNumber, false, false) != e->neighborOffno)
 			elog(ERROR, "failed to add index item to \"%s\"", RelationGetRelationName(index));
 	}
 

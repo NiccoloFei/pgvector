@@ -228,7 +228,7 @@ RepairGraphElement(HnswVacuumState * vacuumstate, HnswElement element, HnswEleme
 	page = GenericXLogRegisterBuffer(state, buf, 0);
 
 	/* Overwrite tuple */
-	if (!PageIndexTupleOverwrite(page, element->neighborOffno, (Item) ntup, ntupSize))
+	if (!PageIndexTupleOverwrite(page, element->neighborOffno, (const void *) ntup, ntupSize))
 		elog(ERROR, "failed to add index item to \"%s\"", RelationGetRelationName(index));
 
 	/* Commit */
